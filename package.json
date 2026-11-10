@@ -1,0 +1,14 @@
+{
+  "name": "@automadocs/github-action",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "GitHub Action that reports AutomaDocs documentation coverage and can gate a build on it",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

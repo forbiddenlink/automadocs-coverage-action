@@ -1,0 +1,39 @@
+name: "AutomaDocs documentation coverage"
+description: "Report AutomaDocs documentation coverage for this repository, and optionally fail the build when it drops below a threshold."
+author: "AutomaDocs"
+
+branding:
+  icon: "book-open"
+  color: "green"
+
+inputs:
+  api-key:
+    description: "AutomaDocs API key. Create one at https://automadocs.com/settings/api and store it as a repository secret."
+    required: true
+  repository:
+    description: "Repository to report on, as an id or owner/name. Defaults to the repository running the workflow."
+    required: false
+    default: ${{ github.repository }}
+  api-url:
+    description: "AutomaDocs API base URL. Override only for self-hosted installs."
+    required: false
+    default: "https://api.automadocs.com"
+  min-coverage:
+    description: "Fail the step when overall coverage is below this score (0-100). Omit to report without gating."
+    required: false
+  summary:
+    description: "Write a coverage table to the job summary."
+    required: false
+    default: "true"
+
+outputs:
+  score:
+    description: "Overall documentation coverage score (0-100)."
+  repository-id:
+    description: "AutomaDocs id of the repository that was reported on."
+  undocumented-count:
+    description: "Number of undocumented items AutomaDocs found."
+
+runs:
+  using: "node20"
+  main: "src/index.js"
