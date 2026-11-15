@@ -67,7 +67,7 @@ coverage, it does not generate documentation. Connect the repository at
 
 GitHub Marketplace serves an action from the root of its own repository, so
 this directory is mirrored to `automadocs/coverage-action` and tagged there.
-It is dependency-free on purpose: `src/` runs as-is on the `node20` runner with
+It is dependency-free on purpose: `src/` runs as-is on the `node24` runner with
 nothing vendored.
 
 ## Development
