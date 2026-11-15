@@ -117,6 +117,24 @@ export function renderSummary(coverage, { minCoverage } = {}) {
 }
 
 /**
+ * Read the overall score from an API payload. A missing, null, blank or
+ * non-numeric score is an error, never 0%: coercing it to 0 reports a fake
+ * number and fails any min-coverage gate for the wrong reason.
+ */
+export function parseScore(coverage) {
+  const raw = coverage?.overallScore;
+  const score =
+    typeof raw === "number" ? raw : typeof raw === "string" && raw.trim() !== "" ? Number(raw) : NaN;
+  if (!Number.isFinite(score)) {
+    throw new ActionError(
+      "The AutomaDocs response has no numeric overallScore, so coverage cannot be reported. " +
+        "The API may have changed or the repository has not been analysed yet.",
+    );
+  }
+  return score;
+}
+
+/**
  * Fetch coverage and decide whether the step passes.
  *
  * @returns {{coverage: object, repository: object, summary: string, failed: boolean, reason?: string}}
@@ -131,11 +149,12 @@ export async function collectCoverage({ apiKey, apiUrl, repository, minCoverage,
   const match = matchRepository(listed?.repositories ?? [], repository);
   const coverage = await post(apiUrl, API_PATHS.coverage, { repo_id: match.id }, apiKey, doFetch);
 
-  const score = Number(coverage.overallScore ?? 0);
+  const score = parseScore(coverage);
   const failed = minCoverage !== undefined && score < minCoverage;
 
   return {
     coverage,
+    score,
     repository: match,
     summary: renderSummary(coverage, { minCoverage }),
     failed,

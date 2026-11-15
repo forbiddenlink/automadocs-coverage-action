@@ -154,3 +154,28 @@ describe("collectCoverage", () => {
     );
   });
 });
+
+describe("missing score", () => {
+  const repos = { body: { repositories: [{ id: 1, name: "a/b" }] } };
+
+  for (const [label, payload] of [
+    ["empty payload", {}],
+    ["null score", { overallScore: null }],
+    ["blank string", { overallScore: " " }],
+    ["non-numeric", { overallScore: "n/a" }],
+  ]) {
+    it(`rejects ${label} instead of reporting 0%`, async () => {
+      const { fetchImpl } = stubFetch([repos, { body: payload }]);
+      await assert.rejects(
+        collectCoverage({ apiKey: "k", apiUrl: "http://x", repository: "a/b", minCoverage: 0, fetchImpl }),
+        ActionError,
+      );
+    });
+  }
+
+  it("still accepts a real zero score", async () => {
+    const { fetchImpl } = stubFetch([repos, { body: { overallScore: 0, repoName: "a/b" } }]);
+    const r = await collectCoverage({ apiKey: "k", apiUrl: "http://x", repository: "a/b", fetchImpl });
+    assert.equal(r.score, 0);
+  });
+});
