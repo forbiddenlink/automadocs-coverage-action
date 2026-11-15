@@ -44,7 +44,7 @@ async function main() {
     minCoverage,
   });
 
-  const score = Number(result.coverage.overallScore ?? 0);
+  const score = result.score;
   setOutput("score", String(score));
   setOutput("repository-id", String(result.repository.id));
   setOutput("undocumented-count", String((result.coverage.undocumentedItems ?? []).length));
@@ -63,6 +63,13 @@ async function main() {
 
 main().catch((error) => {
   const message = error instanceof ActionError ? error.message : String(error?.message ?? error);
+  // fail-on-error defaults to true. Set it to "false" to only warn when the
+  // report itself could not be produced (API outage, missing score). A score
+  // below min-coverage still fails: that is a result, not an error.
+  if (getInput("fail-on-error").toLowerCase() === "false") {
+    console.log(`::warning::${message} (fail-on-error is false, so the step passes.)`);
+    return;
+  }
   console.log(`::error::${message}`);
   process.exitCode = 1;
 });

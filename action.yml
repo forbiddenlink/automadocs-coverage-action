@@ -21,6 +21,10 @@ inputs:
   min-coverage:
     description: "Fail the step when overall coverage is below this score (0-100). Omit to report without gating."
     required: false
+  fail-on-error:
+    description: "Fail the step when the report cannot be produced (API error, missing score). Set to false to warn and pass instead. A score below min-coverage always fails."
+    required: false
+    default: "true"
   summary:
     description: "Write a coverage table to the job summary."
     required: false

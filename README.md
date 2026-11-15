@@ -37,6 +37,7 @@ below `min-coverage`. Leave `min-coverage` out to report without gating.
 | `repository` | no | `${{ github.repository }}` | Repository to report on, as an id or `owner/name` |
 | `api-url` | no | `https://api.automadocs.com` | Override for self-hosted installs |
 | `min-coverage` | no | | Fail the step below this score (0-100) |
+| `fail-on-error` | no | `true` | Set `false` to warn and pass when the API errors or returns no score. A score below `min-coverage` still fails |
 | `summary` | no | `true` | Write the coverage table to the job summary |
 
 ## Outputs
