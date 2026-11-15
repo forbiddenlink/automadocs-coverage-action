@@ -60,19 +60,20 @@ Use them in later steps:
 
 ## Requirements
 
-The repository has to be documented on AutomaDocs first — the action reads
+The repository has to be documented on AutomaDocs first. The action reads
 coverage, it does not generate documentation. Connect the repository at
 [automadocs.com](https://automadocs.com), then point this action at it.
 
-## Publishing
+## Versioning
 
-GitHub Marketplace serves an action from the root of its own repository, so
-this directory is mirrored to `automadocs/coverage-action` and tagged there.
-It is dependency-free on purpose: `src/` runs as-is on the `node24` runner with
-nothing vendored.
+Reference the action by major tag, `forbiddenlink/automadocs-coverage-action@v1`. The tags `v1` and `v1.0.0` exist; `v1` moves forward with fixes. The action is dependency-free (no `@actions/core`, no vendored `node_modules`): `src/` runs as-is on the `node24` runner.
 
 ## Development
 
 ```bash
-npm test   # node --test, no dependencies
+npm test   # node --test test/*.test.js, no dependencies (Node 20 or later)
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
