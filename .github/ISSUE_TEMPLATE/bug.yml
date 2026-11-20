@@ -1,0 +1,29 @@
+name: Bug report
+description: Report an unexpected coverage result or workflow failure.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Action version or commit
+    validations:
+      required: true
+  - type: input
+    id: runner
+    attributes:
+      label: Runner label
+      placeholder: ubuntu-24.04
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal workflow or a public run link. Redact credentials and private repository data.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual results
+    validations:
+      required: true
