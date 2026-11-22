@@ -78,12 +78,16 @@ export function matchRepository(repositories, target) {
 }
 
 /** Markdown table for the job summary. */
-export function renderSummary(coverage, { minCoverage } = {}) {
+export const UPGRADE_URL =
+  "https://automadocs.com/?utm_source=github-action&utm_medium=marketplace";
+export const UPGRADE_LINE = `Keep docs current on every push with [AutomaDocs](${UPGRADE_URL}).`;
+
+export function renderSummary(coverage, { minCoverage, showUpgradeLink = true } = {}) {
   const score = Number(coverage.overallScore ?? 0);
   const lines = [
     "## AutomaDocs coverage",
     "",
-    `**${coverage.repoName}** — ${score.toFixed(0)}%`,
+    `**${coverage.repoName}**: ${score.toFixed(0)}%`,
     "",
   ];
 
@@ -110,10 +114,14 @@ export function renderSummary(coverage, { minCoverage } = {}) {
   }
 
   if (minCoverage !== undefined && score < minCoverage) {
-    lines.push(`> Below the required ${minCoverage}%.`);
+    lines.push(`> Below the required ${minCoverage}%.`, "");
   }
 
-  return lines.join("\n");
+  if (showUpgradeLink) {
+    lines.push(UPGRADE_LINE);
+  }
+
+  return lines.join("\n").trimEnd();
 }
 
 /**
@@ -139,7 +147,7 @@ export function parseScore(coverage) {
  *
  * @returns {{coverage: object, repository: object, summary: string, failed: boolean, reason?: string}}
  */
-export async function collectCoverage({ apiKey, apiUrl, repository, minCoverage, fetchImpl }) {
+export async function collectCoverage({ apiKey, apiUrl, repository, minCoverage, showUpgradeLink = true, fetchImpl }) {
   if (!apiKey) {
     throw new ActionError("No api-key input. Store an AutomaDocs API key as a repository secret.");
   }
@@ -156,7 +164,7 @@ export async function collectCoverage({ apiKey, apiUrl, repository, minCoverage,
     coverage,
     score,
     repository: match,
-    summary: renderSummary(coverage, { minCoverage }),
+    summary: renderSummary(coverage, { minCoverage, showUpgradeLink }),
     failed,
     reason: failed
       ? `Documentation coverage is ${score.toFixed(0)}%, below the required ${minCoverage}%.`

@@ -1,5 +1,5 @@
 name: "AutomaDocs documentation coverage"
-description: "Report AutomaDocs documentation coverage for this repository, and optionally fail the build when it drops below a threshold."
+description: "Report documentation coverage in your job summary and fail the build when it drops below a threshold."
 author: "AutomaDocs"
 
 branding:
@@ -27,6 +27,10 @@ inputs:
     default: "true"
   summary:
     description: "Write a coverage table to the job summary."
+    required: false
+    default: "true"
+  show-upgrade-link:
+    description: "Add a one-line link to automadocs.com at the end of the job summary. Set to false to omit it."
     required: false
     default: "true"
 
