@@ -57,7 +57,7 @@ describe("renderSummary", () => {
       undocumentedItems: [{ name: "handleWebhook" }],
     });
 
-    assert.match(summary, /\*\*acme\/api\*\* — 72%/);
+    assert.match(summary, /\*\*acme\/api\*\*: 72%/);
     assert.match(summary, /\| readme \| 100% \|/);
     assert.match(summary, /\| functions \| 55% \|/);
     assert.match(summary, /- handleWebhook/);
@@ -72,6 +72,25 @@ describe("renderSummary", () => {
     const undocumentedItems = Array.from({ length: 14 }, (_, i) => ({ name: `fn${i}` }));
     const summary = renderSummary({ repoName: "acme/api", overallScore: 10, undocumentedItems });
     assert.match(summary, /and 4 more/);
+  });
+});
+
+describe("upgrade link", () => {
+  const cov = { repoName: "acme/api", overallScore: 72 };
+
+  it("ends the summary with one tagged link by default", () => {
+    const lines = renderSummary(cov).split("\n");
+    const last = lines.at(-1);
+    assert.match(last, /\(https:\/\/automadocs\.com\/\?utm_source=github-action&utm_medium=marketplace\)/);
+    assert.equal(lines.filter((l) => /https:\/\/automadocs\.com\//.test(l)).length, 1);
+  });
+
+  it("omits the link when showUpgradeLink is false", () => {
+    assert.doesNotMatch(renderSummary(cov, { showUpgradeLink: false }), /automadocs\.com/);
+  });
+
+  it("has no em dashes in the summary", () => {
+    assert.doesNotMatch(renderSummary(cov, { minCoverage: 90 }), /\u2014/);
   });
 });
 

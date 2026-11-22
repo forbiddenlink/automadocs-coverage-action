@@ -1,12 +1,20 @@
-# AutomaDocs coverage action
+# AutomaDocs documentation coverage
 
-Report AutomaDocs documentation coverage on every push or pull request, and
-optionally fail the build when it drops below a threshold.
+Show your repository's documentation coverage in every job summary, and fail
+the build when it drops below a threshold you choose.
 
-## Usage
+```yaml
+- uses: forbiddenlink/automadocs-coverage-action@v1
+  with:
+    api-key: ${{ secrets.AUTOMADOCS_API_KEY }}
+    min-coverage: 70
+```
 
-Store an [API key](https://automadocs.com/settings/api) as a repository
-secret, then add a step:
+Create an [API key](https://automadocs.com/settings/api?utm_source=github-action&utm_medium=marketplace)
+and store it as a repository secret named `AUTOMADOCS_API_KEY`. Leave
+`min-coverage` out to report without gating.
+
+## Full workflow
 
 ```yaml
 name: Docs
@@ -26,9 +34,6 @@ jobs:
           min-coverage: 70
 ```
 
-The step writes a coverage table to the job summary and fails when coverage is
-below `min-coverage`. Leave `min-coverage` out to report without gating.
-
 ## Inputs
 
 | Input | Required | Default | Description |
@@ -39,6 +44,7 @@ below `min-coverage`. Leave `min-coverage` out to report without gating.
 | `min-coverage` | no | | Fail the step below this score (0-100) |
 | `fail-on-error` | no | `true` | Set `false` to warn and pass when the API errors or returns no score. A score below `min-coverage` still fails |
 | `summary` | no | `true` | Write the coverage table to the job summary |
+| `show-upgrade-link` | no | `true` | End the job summary with one link to automadocs.com. Set `false` to omit it |
 
 ## Outputs
 
@@ -58,11 +64,39 @@ Use them in later steps:
       - run: echo "Coverage is ${{ steps.docs.outputs.score }}%"
 ```
 
+## Example output
+
+The job summary looks like this:
+
+> ## AutomaDocs coverage
+>
+> **acme/api**: 72%
+>
+> | Area | Score |
+> | --- | ---: |
+> | readme | 100% |
+> | functions | 55% |
+>
+> 2 undocumented item(s):
+>
+> - handleWebhook
+> - parseConfig
+>
+> Keep docs current on every push with [AutomaDocs](https://automadocs.com/?utm_source=github-action&utm_medium=marketplace).
+
 ## Requirements
 
 The repository has to be documented on AutomaDocs first. The action reads
 coverage, it does not generate documentation. Connect the repository at
 [automadocs.com](https://automadocs.com), then point this action at it.
+
+## Want more?
+
+This action reads coverage. [AutomaDocs](https://automadocs.com/?utm_source=github-action&utm_medium=marketplace)
+generates the documentation from your code, refreshes it on every push, and
+lets your team ask questions about the codebase with cited answers. There is a
+free plan for one public repository; Pro ($49/month) covers 20 repositories and
+Team ($149/month) adds unlimited repositories, custom domains and SSO.
 
 ## Versioning
 

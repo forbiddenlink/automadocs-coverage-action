@@ -42,6 +42,7 @@ async function main() {
     apiUrl: getInput("api-url") || "https://api.automadocs.com",
     repository: getInput("repository") || process.env.GITHUB_REPOSITORY,
     minCoverage,
+    showUpgradeLink: getInput("show-upgrade-link").toLowerCase() !== "false",
   });
 
   const score = result.score;
