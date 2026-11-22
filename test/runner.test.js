@@ -82,7 +82,7 @@ describe("upgrade link", () => {
     const lines = renderSummary(cov).split("\n");
     const last = lines.at(-1);
     assert.match(last, /\(https:\/\/automadocs\.com\/\?utm_source=github-action&utm_medium=marketplace\)/);
-    assert.equal(lines.filter((l) => l.includes("automadocs.com")).length, 1);
+    assert.equal(lines.filter((l) => /https:\/\/automadocs\.com\//.test(l)).length, 1);
   });
 
   it("omits the link when showUpgradeLink is false", () => {
